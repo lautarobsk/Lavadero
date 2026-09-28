@@ -9,8 +9,8 @@ Este proyecto es un sistema de gestión desarrollado en Django, pensado específ
 - **Sistema de Comisiones:** Permite asignar múltiples empleados a un mismo lavado. El sistema calcula automáticamente la comisión total (ej. 40% del precio final) y la divide equitativamente entre los empleados involucrados en ese trabajo.
 - **Panel de Administración (Django Admin):** Interfaz lista para usar que permite a los operadores administrar registros, modificar precios y visualizar las estadísticas de forma rápida.
 
-## Proyecto de Prueba con Antigravity 🚀
-Más allá de su utilidad práctica, este repositorio sirve como demostración y entorno de pruebas para el uso de **Antigravity**, el asistente avanzado de programación basado en Inteligencia Artificial.
+## Proyecto de Prueba con Antigravity
+Más allá de su utilidad práctica, este repositorio sirve como demostración y entorno de pruebas para el uso de Antigravity, el asistente avanzado de programación basado en Inteligencia Artificial.
 
 A través del uso de la IA, se logró:
 - Prototipar y modelar rápidamente las entidades de base de datos.
@@ -22,6 +22,6 @@ A través del uso de la IA, se logró:
 - **Python**
 - **Django** (Backend y Panel de Administración)
 - **SQLite** (Base de datos por defecto para desarrollo local)
-- **Django REST Framework** (Preparado para la futura exposición de endpoints y APIs)
+- **Django REST Framework** (Preparado para la exposición de endpoints y APIs)
 
 
