@@ -1,27 +1,28 @@
 # Sistema de Gestión para Lavadero
 
 ## Acerca del Proyecto
-Este proyecto es un sistema de gestión desarrollado en Django, pensado específicamente para administrar un Lavadero de vehículos. Permite llevar un registro detallado de los trabajos realizados, los empleados que participaron y calcular de forma automática los pagos y comisiones.
+Este proyecto es un sistema web de gestión full-stack, pensado específicamente para administrar un Lavadero de vehículos. Permite llevar un registro detallado de los trabajos diarios, gestionar los empleados involucrados y calcular de forma automática los ingresos y comisiones.
 
 ### Características Principales:
-- **Gestión de Servicios:** Soporte para múltiples tipos de servicios (ej. Lavado Básico, Lavado Completo) con listas de precios diferenciadas según el tamaño o tipo de vehículo (Auto, Camioneta/SUV, Moto).
-- **Registro Diario de Lavados:** Control de vehículos lavados por patente, tipo de vehículo y servicio seleccionado. Permite añadir "cobros extras" a demanda.
-- **Sistema de Comisiones:** Permite asignar múltiples empleados a un mismo lavado. El sistema calcula automáticamente la comisión total (ej. 40% del precio final) y la divide equitativamente entre los empleados involucrados en ese trabajo.
-- **Panel de Administración (Django Admin):** Interfaz lista para usar que permite a los operadores administrar registros, modificar precios y visualizar las estadísticas de forma rápida.
+- **Frontend Interactivo:** Construido con React, Vite y TailwindCSS para visualizar de forma ágil y moderna la lista de lavados registrados en el día.
+- **Gestión de Servicios y Vehículos:** Soporte para registrar múltiples tipos de vehículos (Auto, Camioneta/SUV, Moto) con precios dinámicos según el servicio prestado, con posibilidad de añadir "cobros extras".
+- **Sistema de Comisiones:** Asignación de múltiples empleados a un mismo lavado, calculando automáticamente la comisión correspondiente (ej. 40%) repartida de manera equitativa entre los empleados.
+- **Panel de Administración Backend:** Administrador listo para usar provisto por Django para gestionar rápidamente todos los registros, altas de empleados y estadísticas.
+
+## Arquitectura y Tecnologías
+El proyecto se compone de dos partes integradas mediante API REST y políticas CORS:
+
+**Backend:**
+- **Python & Django** (Lógica de negocio y Panel de Admin)
+- **Django REST Framework (DRF)** (Construcción de la API)
+- **SQLite** (Base de datos de desarrollo)
+- **django-cors-headers** (Gestión de peticiones Cross-Origin)
+
+**Frontend:**
+- **React 18** (Librería de UI)
+- **Vite** (Empaquetador y entorno de desarrollo ultra rápido)
+- **Tailwind CSS** (Estilos rápidos y modernos)
+- **Axios** (Peticiones asíncronas a la API)
 
 ## Proyecto de Prueba con Antigravity
-Más allá de su utilidad práctica, este repositorio sirve como demostración y entorno de pruebas para el uso de Antigravity, el asistente avanzado de programación basado en Inteligencia Artificial.
-
-A través del uso de la IA, se logró:
-- Prototipar y modelar rápidamente las entidades de base de datos.
-- Iterar sobre las reglas de negocio en tiempo real (por ejemplo, transicionar de un precio fijo a un modelo de precios dinámicos por tipo de vehículo).
-- Ejecutar migraciones y refactorizar código sin salir del editor.
-- Experimentar el impacto de la colaboración "Pair Programming" con agentes inteligentes de Google DeepMind para acelerar el desarrollo backend.
-
-## Tecnologías Utilizadas
-- **Python**
-- **Django** (Backend y Panel de Administración)
-- **SQLite** (Base de datos por defecto para desarrollo local)
-- **Django REST Framework** (Preparado para la exposición de endpoints y APIs)
-
-
+Más allá de su utilidad práctica, este repositorio sirve como demostración del uso de Antigravity, el asistente avanzado de programación basado en Inteligencia Artificial de Google DeepMind. Gracias a esta herramienta se logró iterar sobre reglas de negocio, refactorizar componentes React y otras cositas más

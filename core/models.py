@@ -1,3 +1,4 @@
+from django.contrib.auth import models
 from django.db import models
 from django.contrib.auth.models import User
 from decimal import Decimal
@@ -28,6 +29,7 @@ class Service(models.Model):
 
 class WashRecord(models.Model):
     date = models.DateTimeField(auto_now_add=True)
+    vehicle = models.CharField(max_length=20, verbose_name='Que auto es')
     vehicle_plate = models.CharField(max_length=20)
     vehicle_type = models.CharField(max_length=20, choices=VEHICLE_CHOICES, verbose_name="Tipo de Vehículo", default='AUTO')
     service = models.ForeignKey(Service, on_delete=models.RESTRICT) 
@@ -49,7 +51,6 @@ class WashRecord(models.Model):
                 
             self.price_charged = base_price + (self.extra_charge or Decimal('0'))
             
-        # El total de la comisión a repartir es siempre el 40% del precio cobrado
         if self.price_charged:
             self.total_commission = self.price_charged * Decimal('0.40')
             
@@ -57,9 +58,6 @@ class WashRecord(models.Model):
 
     @property
     def commission_per_employee(self):
-        """
-        Divide la comisión total (40%) entre la cantidad de empleados que participaron.
-        """
         count = self.employees.count()
         if count > 0:
             return round(self.total_commission / Decimal(count), 2)

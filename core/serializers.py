@@ -39,7 +39,7 @@ class WashRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = WashRecord
         fields = [
-            'id', 'date', 'vehicle_plate', 'vehicle_type', 'service', 'service_detail',
+            'id', 'date', 'vehicle', 'vehicle_plate', 'vehicle_type', 'service', 'service_detail',
             'employees', 'employees_detail', 'extra_charge', 'price_charged',
             'total_commission', 'commission_per_employee'
         ]
