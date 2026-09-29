@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import DailyList from './components/DailyList';
 import Sidebar from './components/Sidebar';
+import Login from './components/Login';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
           <Routes>
             <Route path="/" element={<DailyList />} />
             <Route path="/contacto" element={<div className="text-xl">Página de Contacto (En construcción)</div>} />
-            <Route path="/login" element={<div className="text-xl">Iniciar / Cerrar Sesión (En construcción)</div>} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </main>
       </div>
