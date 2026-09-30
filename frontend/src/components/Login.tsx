@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Login() {
     const [username, setUsername] = useState('');
@@ -11,24 +12,16 @@ export default function Login() {
         e.preventDefault();
         setError('');
         try {
-            const response = await fetch('http://localhost:8000/api/token/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
+            const response = await axios.post('http://localhost:8000/api/token/', {
+                username, 
+                password
             });
 
-            if (!response.ok) {
-                throw new Error('Credenciales inválidas');
-            }
-
-            const data = await response.json();
-            localStorage.setItem('access_token', data.access);
-            localStorage.setItem('refresh_token', data.refresh);
+            localStorage.setItem('access_token', response.data.access);
+            localStorage.setItem('refresh_token', response.data.refresh);
             navigate('/');
         } catch (err: any) {
-            setError(err.message);
+            setError(err.response?.data?.detail || 'Credenciales inválidas');
         }
     };
 

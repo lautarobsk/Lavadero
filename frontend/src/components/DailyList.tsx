@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getAllWashRecords } from '../api/washRecords.api';
 
 export default function DailyList() {
-    const [records, setRecords] = useState([]);
+    const [records, setRecords] = useState<any[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadWashRecords = async () => {
@@ -18,9 +20,13 @@ export default function DailyList() {
 
     return (
         <div>
-            <ul>
+            <ul className="bg-white rounded-lg shadow p-4">
                 {records.map((record) => (
-                    <li key={record.id} className="flex gap-6 py-3 border-b border-gray-700 text-black">
+                    <li 
+                        key={record.id} 
+                        onClick={() => navigate(`/lavado/${record.id}`)}
+                        className="flex flex-wrap gap-6 py-4 border-b border-gray-200 text-gray-800 cursor-pointer hover:bg-gray-50 transition-colors"
+                    >
                         <span>Vehiculo: {record.vehicle}</span>
                         <span>Tipo: {record.vehicle_type}</span>
                         <span>Servicio: {record.service_detail.name}</span>

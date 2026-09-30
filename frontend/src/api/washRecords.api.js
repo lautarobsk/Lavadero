@@ -20,3 +20,15 @@ washRecordsApi.interceptors.request.use(
 export const getAllWashRecords = () => {
     return washRecordsApi.get('/');
 }
+
+export const getWashRecord = (id) => {
+    return washRecordsApi.get(`/${id}/`);
+}
+
+export const updateWashRecord = (id, data) => {
+    return washRecordsApi.patch(`/${id}/`, data);
+}
+
+export const deleteWashRecord = (id) => {
+    return washRecordsApi.delete(`/${id}/`);
+}

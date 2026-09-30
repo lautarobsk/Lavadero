@@ -7,16 +7,16 @@ export default function Sidebar() {
             <nav className="flex-1">
                 <ul className="space-y-4">
                     <li>
-                        <Link 
-                            to="/" 
+                        <Link
+                            to="/"
                             className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
                         >
-                            Daily List
+                            Lavados
                         </Link>
                     </li>
                     <li>
-                        <Link 
-                            to="/contacto" 
+                        <Link
+                            to="/contacto"
                             className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
                         >
                             Contacto
@@ -25,8 +25,8 @@ export default function Sidebar() {
                 </ul>
             </nav>
             <div className="pt-4 border-t border-gray-700 mt-auto">
-                <Link 
-                    to="/login" 
+                <Link
+                    to="/login"
                     className="block px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
                 >
                     Cerrar / Iniciar Sesión
