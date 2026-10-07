@@ -37,6 +37,10 @@ export const updateWashRecord = (id, data) => {
     return washRecordsApi.patch(`washrecords/${id}/`, data);
 }
 
+export const createWashRecord = (data) => {
+    return washRecordsApi.post('washrecords/', data);
+}
+
 export const deleteWashRecord = (id) => {
     return washRecordsApi.delete(`washrecords/${id}/`);
 }

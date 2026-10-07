@@ -4,6 +4,7 @@ import DailyList from './components/DailyList';
 import Sidebar from './components/Sidebar';
 import Login from './components/Login';
 import WashRecordDetail from './components/WashRecordDetail';
+import WashRecordCreate from './components/WashRecordCreate';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <h1 className="text-4xl font-extrabold text-blue-600 mb-8 drop-shadow-sm">Lavadero</h1>
           <Routes>
             <Route path="/" element={<DailyList />} />
+            <Route path="/lavado/nuevo" element={<WashRecordCreate />} />
             <Route path="/lavado/:id" element={<WashRecordDetail />} />
             <Route path="/contacto" element={<div className="text-xl">Página de Contacto (En construcción)</div>} />
             <Route path="/login" element={<Login />} />

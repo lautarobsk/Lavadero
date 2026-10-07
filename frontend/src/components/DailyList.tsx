@@ -20,6 +20,15 @@ export default function DailyList() {
 
     return (
         <div>
+            <div className="mb-6 flex justify-between items-center">
+                <h2 className="text-2xl font-bold text-gray-800">Lavados</h2>
+                <button 
+                    onClick={() => navigate('/lavado/nuevo')}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition shadow"
+                >
+                    Agregar Lavado
+                </button>
+            </div>
             <ul className="bg-white rounded-lg shadow p-4">
                 {records.map((record) => (
                     <li
