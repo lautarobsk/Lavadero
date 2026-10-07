@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const washRecordsApi = axios.create({
-    baseURL: "http://localhost:8000/api/washrecords/",
+    baseURL: "http://localhost:8000/api/",
 });
 
 washRecordsApi.interceptors.request.use(
@@ -18,17 +18,25 @@ washRecordsApi.interceptors.request.use(
 );
 
 export const getAllWashRecords = () => {
-    return washRecordsApi.get('/');
+    return washRecordsApi.get('washrecords/');
+}
+
+export const getServices = () => {
+    return washRecordsApi.get('services/');
+}
+
+export const getEmployees = () => {
+    return washRecordsApi.get('employees/');
 }
 
 export const getWashRecord = (id) => {
-    return washRecordsApi.get(`/${id}/`);
+    return washRecordsApi.get(`washrecords/${id}/`);
 }
 
 export const updateWashRecord = (id, data) => {
-    return washRecordsApi.patch(`/${id}/`, data);
+    return washRecordsApi.patch(`washrecords/${id}/`, data);
 }
 
 export const deleteWashRecord = (id) => {
-    return washRecordsApi.delete(`/${id}/`);
+    return washRecordsApi.delete(`washrecords/${id}/`);
 }

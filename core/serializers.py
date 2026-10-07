@@ -43,4 +43,4 @@ class WashRecordSerializer(serializers.ModelSerializer):
             'employees', 'employees_detail', 'extra_charge', 'price_charged',
             'total_commission', 'commission_per_employee'
         ]
-        read_only_fields = ['price_charged', 'total_commission']
+        read_only_fields = ['total_commission']

@@ -1,6 +1,6 @@
 from rest_framework import viewsets, permissions
 from django.contrib.auth.models import User
-from .models import Service, WashRecord
+from .models import Service, WashRecord, Employee
 from .serializers import UserSerializer, EmployeeSerializer, ServiceSerializer, WashRecordSerializer
 from .permissions import IsAdminOrReadOnly, IsEmployeeOrAdmin
 
@@ -19,4 +19,9 @@ class ServiceViewSet(viewsets.ModelViewSet):
 class WashRecordViewSet(viewsets.ModelViewSet):
     queryset = WashRecord.objects.all().order_by('-date')
     serializer_class = WashRecordSerializer
+    permission_classes = [IsEmployeeOrAdmin]
+
+class EmployeeViewSet(viewsets.ModelViewSet):
+    queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
     permission_classes = [IsEmployeeOrAdmin]

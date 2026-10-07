@@ -22,8 +22,8 @@ export default function DailyList() {
         <div>
             <ul className="bg-white rounded-lg shadow p-4">
                 {records.map((record) => (
-                    <li 
-                        key={record.id} 
+                    <li
+                        key={record.id}
                         onClick={() => navigate(`/lavado/${record.id}`)}
                         className="flex flex-wrap gap-6 py-4 border-b border-gray-200 text-gray-800 cursor-pointer hover:bg-gray-50 transition-colors"
                     >
