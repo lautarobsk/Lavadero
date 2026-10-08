@@ -1,7 +1,7 @@
 # Sistema de Gestión para Lavadero
 
 ## Acerca del Proyecto
-Este proyecto es un sistema web de gestión full-stack, pensado específicamente para administrar un Lavadero de vehículos. Permite llevar un registro detallado de los trabajos diarios, gestionar los empleados involucrados y calcular de forma automática los ingresos y comisiones.
+Este proyecto es un sistema web de gestión full-stack, pensado específicamente para administrar un Lavadero de vehículos, la idea es desarrollar un sistema de gestión e implementarlo en el lavadero de mi familia. El sistema permite llevar un registro detallado de los trabajos diarios, gestionar los empleados involucrados y calcular de forma automática los ingresos y comisiones.
 
 ### Características Principales:
 - **Frontend Interactivo:** Construido con React, Vite y TailwindCSS para visualizar de forma ágil y moderna la lista de lavados registrados en el día.
@@ -16,13 +16,13 @@ El proyecto se compone de dos partes integradas mediante API REST y políticas C
 - **Python & Django** (Lógica de negocio y Panel de Admin)
 - **Django REST Framework (DRF)** (Construcción de la API)
 - **SQLite** (Base de datos de desarrollo)
-- **django-cors-headers** (Gestión de peticiones Cross-Origin)
 
 **Frontend:**
 - **React 18** (Librería de UI)
 - **Vite** (Empaquetador y entorno de desarrollo ultra rápido)
 - **Tailwind CSS** (Estilos rápidos y modernos)
-- **Axios** (Peticiones asíncronas a la API)
 
 ## Proyecto de Prueba con Antigravity
-Más allá de su utilidad práctica, este repositorio sirve como demostración del uso de Antigravity, el asistente avanzado de programación basado en Inteligencia Artificial de Google DeepMind. Gracias a esta herramienta se logró iterar sobre reglas de negocio, refactorizar componentes React y otras cositas más
+Más allá de su utilidad práctica, este repositorio sirve como demostración del uso de Antigravity, el asistente avanzado de programación basado en Inteligencia Artificial de Google DeepMind. Gracias a esta herramienta se logró iterar sobre reglas de negocio, refactorizar componentes React y otras cositas más.
+Le voy dando los prompt y controlando que todo el codigo sea entendible y funcional, tratando de involucrar lo menos posible la codificación humana. En caso de error le muestro el error y me da soluciones alternativas o implemento las soluciones que me parecen correctas o acertadas a nivel de arquitectura para lo que el proyecto va requiriendo. Luego de implementar una modificación le pido que haga correr el testeo de integración para validar que todo siga funcionando correctamente.
+El objetivo es crear un sistema completo y funcional para el lavadero, involucrando lo menos posible la codificación humana, para optimizar el tiempo de desarrollo y poder enfocarnos en la lógica del negocio y las funcionalidades que realmente aportan valor.
