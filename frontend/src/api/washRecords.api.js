@@ -17,8 +17,12 @@ washRecordsApi.interceptors.request.use(
     }
 );
 
-export const getAllWashRecords = () => {
-    return washRecordsApi.get('washrecords/');
+export const getAllWashRecords = (date) => {
+    let url = 'washrecords/';
+    if (date) {
+        url += `?date=${date}`;
+    }
+    return washRecordsApi.get(url);
 }
 
 export const getServices = () => {

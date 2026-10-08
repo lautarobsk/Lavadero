@@ -4,24 +4,33 @@ import { getAllWashRecords } from '../api/washRecords.api';
 
 export default function DailyList() {
     const [records, setRecords] = useState<any[]>([]);
+    const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
     const navigate = useNavigate();
 
     useEffect(() => {
         const loadWashRecords = async () => {
             try {
-                const response = await getAllWashRecords();
+                const response = await getAllWashRecords(selectedDate);
                 setRecords(response.data.results || response.data);
             } catch (error) {
                 console.error('Error al cargar los registros:', error);
             }
         }
         loadWashRecords();
-    }, []);
+    }, [selectedDate]);
 
     return (
         <div>
             <div className="mb-6 flex justify-between items-center">
-                <h2 className="text-2xl font-bold text-gray-800">Lavados</h2>
+                <div className="flex items-center gap-4">
+                    <h2 className="text-2xl font-bold text-gray-800">Lavados</h2>
+                    <input 
+                        type="date" 
+                        value={selectedDate} 
+                        onChange={(e) => setSelectedDate(e.target.value)} 
+                        className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
                 <button 
                     onClick={() => navigate('/lavado/nuevo')}
                     className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition shadow"

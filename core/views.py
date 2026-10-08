@@ -21,6 +21,13 @@ class WashRecordViewSet(viewsets.ModelViewSet):
     serializer_class = WashRecordSerializer
     permission_classes = [IsEmployeeOrAdmin]
 
+    def get_queryset(self):
+        queryset = WashRecord.objects.all().order_by('-date')
+        date = self.request.query_params.get('date', None)
+        if date is not None:
+            queryset = queryset.filter(date__date=date)
+        return queryset
+
 class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
