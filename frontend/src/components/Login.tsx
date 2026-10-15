@@ -13,7 +13,7 @@ export default function Login() {
         setError('');
         try {
             const response = await axios.post('http://localhost:8000/api/token/', {
-                username, 
+                username,
                 password
             });
 
@@ -35,50 +35,80 @@ export default function Login() {
 
     if (isLoggedIn) {
         return (
-            <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded-xl shadow-md text-center">
-                <h2 className="text-2xl font-bold mb-4 text-gray-800">¿Seguro que desea cerrar sesión?</h2>
-                <button
-                    onClick={handleLogout}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                >
-                    Cerrar Sesión
-                </button>
+            <div className="max-w-md mx-auto mt-14 bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden text-center">
+                <div className="bg-gradient-to-r from-francia-700 to-francia-800 p-6 text-white border-b-4 border-rojo-600">
+                    <h2 className="text-xl font-bold">Sesión Activa</h2>
+                </div>
+                <div className="p-8">
+                    <p className="text-slate-600 mb-6 text-base">¿Estás seguro que deseas cerrar tu sesión actual?</p>
+                    <div className="flex gap-3 justify-center">
+                        <button
+                            type="button"
+                            onClick={() => navigate('/')}
+                            className="bg-white border border-slate-300 text-slate-700 hover:bg-slate-50 font-semibold px-5 py-2.5 rounded-xl shadow-sm transition active:scale-95"
+                        >
+                            Volver al Inicio
+                        </button>
+                        <button
+                            onClick={handleLogout}
+                            className="bg-rojo-600 hover:bg-rojo-700 active:scale-95 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition"
+                        >
+                            Cerrar Sesión
+                        </button>
+                    </div>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="max-w-md mx-auto mt-20 p-6 bg-white rounded-xl shadow-md">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">Iniciar Sesión</h2>
-            {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
-            <form onSubmit={handleLogin} className="space-y-4">
-                <div>
-                    <label className="block text-gray-700 mb-1">Usuario</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        className="w-full border border-gray-300 rounded px-3 py-2 text-black"
-                        required
-                    />
+        <div className="max-w-md mx-auto mt-14 bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+            <div className="bg-gradient-to-r from-francia-700 to-francia-800 p-6 text-white border-b-4 border-rojo-600 text-center">
+                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl font-black">
+                    🔑
                 </div>
-                <div>
-                    <label className="block text-gray-700 mb-1">Contraseña</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full border border-gray-300 rounded px-3 py-2 text-black"
-                        required
-                    />
-                </div>
-                <button
-                    type="submit"
-                    className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition font-semibold"
-                >
-                    Ingresar
-                </button>
-            </form>
+                <h2 className="text-2xl font-black tracking-tight">Iniciar Sesión</h2>
+                <p className="text-francia-100 text-sm mt-1">Acceso al panel del lavadero</p>
+            </div>
+
+            <div className="p-8">
+                {error && (
+                    <div className="bg-rojo-50 border-l-4 border-rojo-600 p-3.5 rounded-xl text-rojo-700 text-sm font-medium mb-6">
+                        {error}
+                    </div>
+                )}
+
+                <form onSubmit={handleLogin} className="space-y-5">
+                    <div>
+                        <label className="block text-slate-700 text-sm font-bold mb-1.5">Usuario</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Nombre de usuario"
+                            className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600 focus:border-francia-600 transition font-medium"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-slate-700 text-sm font-bold mb-1.5">Contraseña</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="••••••••"
+                            className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600 focus:border-francia-600 transition font-medium"
+                            required
+                        />
+                    </div>
+                    <button
+                        type="submit"
+                        className="w-full bg-francia-600 hover:bg-francia-700 active:scale-95 text-white font-bold py-3 rounded-xl shadow-md transition mt-2"
+                    >
+                        Ingresar
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }
