@@ -21,11 +21,10 @@ export default function Sidebar() {
                     <li>
                         <Link
                             to="/"
-                            className={`block px-4 py-2.5 rounded-xl transition-all duration-200 font-medium ${
-                                isLinkActive('/') 
-                                    ? 'bg-white text-francia-800 font-bold shadow-md shadow-black/10' 
-                                    : 'text-white/90 hover:bg-white/10 hover:text-white hover:translate-x-1'
-                            }`}
+                            className={`block px-4 py-2.5 rounded-xl transition-all duration-200 font-medium ${isLinkActive('/')
+                                ? 'bg-white text-francia-800 font-bold shadow-md shadow-black/10'
+                                : 'text-white/90 hover:bg-white/10 hover:text-white hover:translate-x-1'
+                                }`}
                         >
                             Lavados
                         </Link>
@@ -33,23 +32,32 @@ export default function Sidebar() {
                     <li>
                         <Link
                             to="/lavado/nuevo"
-                            className={`block px-4 py-2.5 rounded-xl transition-all duration-200 font-medium ${
-                                isLinkActive('/lavado/nuevo') 
-                                    ? 'bg-white text-francia-800 font-bold shadow-md shadow-black/10' 
-                                    : 'text-white/90 hover:bg-white/10 hover:text-white hover:translate-x-1'
-                            }`}
+                            className={`block px-4 py-2.5 rounded-xl transition-all duration-200 font-medium ${isLinkActive('/lavado/nuevo')
+                                ? 'bg-white text-francia-800 font-bold shadow-md shadow-black/10'
+                                : 'text-white/90 hover:bg-white/10 hover:text-white hover:translate-x-1'
+                                }`}
                         >
-                            + Nuevo Lavado
+                            Agregar Lavado
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            to="/sueldos"
+                            className={`block px-4 py-2.5 rounded-xl transition-all duration-200 font-medium ${isLinkActive('/sueldos')
+                                ? 'bg-white text-francia-800 font-bold shadow-md shadow-black/10'
+                                : 'text-white/90 hover:bg-white/10 hover:text-white hover:translate-x-1'
+                                }`}
+                        >
+                            Administración
                         </Link>
                     </li>
                     <li>
                         <Link
                             to="/contacto"
-                            className={`block px-4 py-2.5 rounded-xl transition-all duration-200 font-medium ${
-                                isLinkActive('/contacto') 
-                                    ? 'bg-white text-francia-800 font-bold shadow-md shadow-black/10' 
-                                    : 'text-white/90 hover:bg-white/10 hover:text-white hover:translate-x-1'
-                            }`}
+                            className={`block px-4 py-2.5 rounded-xl transition-all duration-200 font-medium ${isLinkActive('/contacto')
+                                ? 'bg-white text-francia-800 font-bold shadow-md shadow-black/10'
+                                : 'text-white/90 hover:bg-white/10 hover:text-white hover:translate-x-1'
+                                }`}
                         >
                             Contacto
                         </Link>
@@ -60,11 +68,10 @@ export default function Sidebar() {
             <div className="pt-4 border-t border-white/20 mt-auto">
                 <Link
                     to="/login"
-                    className={`block px-4 py-2.5 rounded-xl transition-colors font-medium text-center border ${
-                        isLinkActive('/login')
-                            ? 'bg-rojo-600 border-rojo-600 text-white font-bold'
-                            : 'border-white/20 text-white/90 hover:bg-rojo-600 hover:border-rojo-600 hover:text-white'
-                    }`}
+                    className={`block px-4 py-2.5 rounded-xl transition-colors font-medium text-center border ${isLinkActive('/login')
+                        ? 'bg-rojo-600 border-rojo-600 text-white font-bold'
+                        : 'border-white/20 text-white/90 hover:bg-rojo-600 hover:border-rojo-600 hover:text-white'
+                        }`}
                 >
                     Cerrar / Iniciar Sesión
                 </Link>

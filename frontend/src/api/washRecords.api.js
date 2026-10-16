@@ -17,10 +17,15 @@ washRecordsApi.interceptors.request.use(
     }
 );
 
-export const getAllWashRecords = (date) => {
+export const getAllWashRecords = (dateOrParams) => {
     let url = 'washrecords/';
-    if (date) {
-        url += `?date=${date}`;
+    if (typeof dateOrParams === 'string' && dateOrParams) {
+        url += `?date=${dateOrParams}`;
+    } else if (typeof dateOrParams === 'object' && dateOrParams !== null) {
+        const query = new URLSearchParams(dateOrParams).toString();
+        if (query) {
+            url += `?${query}`;
+        }
     }
     return washRecordsApi.get(url);
 }

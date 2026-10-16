@@ -26,6 +26,12 @@ class WashRecordViewSet(viewsets.ModelViewSet):
         date = self.request.query_params.get('date', None)
         if date is not None:
             queryset = queryset.filter(date__date=date)
+        start_date = self.request.query_params.get('start_date', None)
+        if start_date is not None:
+            queryset = queryset.filter(date__date__gte=start_date)
+        end_date = self.request.query_params.get('end_date', None)
+        if end_date is not None:
+            queryset = queryset.filter(date__date__lte=end_date)
         return queryset
 
 class EmployeeViewSet(viewsets.ModelViewSet):

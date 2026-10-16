@@ -4,8 +4,32 @@ import { getAllWashRecords } from '../api/washRecords.api';
 
 export default function DailyList() {
     const [records, setRecords] = useState<any[]>([]);
-    const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
+    const [selectedDate, setSelectedDate] = useState<string>(() => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    });
     const navigate = useNavigate();
+
+    const formatTime = (dateString?: string) => {
+        if (!dateString) return '';
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                const match = dateString.match(/(\d{2}:\d{2})/);
+                return match ? `${match[1]} hs` : dateString;
+            }
+            return date.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }) + ' hs';
+        } catch {
+            return '';
+        }
+    };
 
     useEffect(() => {
         const loadWashRecords = async () => {
@@ -95,8 +119,11 @@ export default function DailyList() {
                                 <div className="text-xl font-black text-francia-700 group-hover:text-rojo-600 transition-colors">
                                     ${record.price_charged}
                                 </div>
-                                <div className="text-xs text-slate-400 font-medium">
-                                    {record.date?.substring(0, 10)}
+                                <div className="text-xs text-slate-500 font-semibold flex items-center gap-1.5 mt-0.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>{formatTime(record.date)}</span>
                                 </div>
                             </div>
                         </div>

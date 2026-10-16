@@ -5,6 +5,7 @@ import Login from './components/Login';
 import WashRecordDetail from './components/WashRecordDetail';
 import WashRecordCreate from './components/WashRecordCreate';
 import Contact from './components/contact';
+import SalaryPanel from './components/SalaryPanel';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
 
             <Routes>
               <Route path="/" element={<DailyList />} />
+              <Route path="/sueldos" element={<SalaryPanel />} />
               <Route path="/lavado/nuevo" element={<WashRecordCreate />} />
               <Route path="/lavado/:id" element={<WashRecordDetail />} />
               <Route path="/contacto" element={<Contact />} />
