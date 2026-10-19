@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createWashRecord, getServices, getEmployees } from '../api/washRecords.api';
+import { createWashRecord, getServices, getEmployees, getCurrentUser } from '../api/washRecords.api';
 
 export default function WashRecordCreate() {
     const navigate = useNavigate();
+    const [currentUser, setCurrentUser] = useState<any>(null);
+    const [notLoggedIn, setNotLoggedIn] = useState(false);
+    const [permissionDenied, setPermissionDenied] = useState(false);
     const [formData, setFormData] = useState<any>({
         vehicle: '',
         vehicle_plate: '',
@@ -18,21 +21,45 @@ export default function WashRecordCreate() {
     const [errorMsg, setErrorMsg] = useState('');
 
     useEffect(() => {
-        const loadData = async () => {
+        const token = localStorage.getItem('access_token');
+        if (!token) {
+            setNotLoggedIn(true);
+            setLoading(false);
+            return;
+        }
+
+        const checkAuthAndLoad = async () => {
             try {
+                setLoading(true);
+                const userRes = await getCurrentUser();
+                const user = userRes.data;
+                setCurrentUser(user);
+
+                if (!user.is_staff) {
+                    setPermissionDenied(true);
+                    setLoading(false);
+                    return;
+                }
+
                 const [servicesRes, employeesRes] = await Promise.all([
                     getServices(),
                     getEmployees()
                 ]);
                 setServices(servicesRes.data.results || servicesRes.data);
                 setEmployees(employeesRes.data.results || employeesRes.data);
-            } catch (error) {
-                setErrorMsg('Error al cargar datos. Asegurate de tener sesión iniciada.');
+            } catch (error: any) {
+                console.error('Error al cargar datos:', error);
+                if (error.response?.status === 401) {
+                    setNotLoggedIn(true);
+                } else {
+                    setErrorMsg('Error al cargar los datos del formulario.');
+                }
             } finally {
                 setLoading(false);
             }
         };
-        loadData();
+
+        checkAuthAndLoad();
     }, []);
 
     const handleEmployeeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -42,6 +69,10 @@ export default function WashRecordCreate() {
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!currentUser?.is_staff) {
+            setErrorMsg('No tienes permisos de administrador para crear lavados.');
+            return;
+        }
         try {
             await createWashRecord(formData);
             navigate('/');
@@ -50,18 +81,68 @@ export default function WashRecordCreate() {
         }
     };
 
-    if (loading) return (
-        <div className="flex items-center justify-center p-16 text-francia-700 font-bold text-lg">
-            <span className="w-4 h-4 rounded-full bg-francia-600 animate-ping mr-3"></span>
-            Cargando opciones...
-        </div>
-    );
+    if (notLoggedIn) {
+        return (
+            <div className="max-w-md mx-auto my-12 bg-white rounded-2xl shadow-sm border border-slate-200 p-8 text-center space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-francia-100 text-francia-700 font-bold text-lg flex items-center justify-center mx-auto">
+                    LP
+                </div>
+                <h2 className="text-xl font-bold text-slate-800">Acceso Restringido</h2>
+                <p className="text-sm text-slate-500">
+                    Debes iniciar sesion con una cuenta autorizada para acceder a esta pagina.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                    <button
+                        onClick={() => navigate('/login')}
+                        className="flex-1 bg-francia-600 hover:bg-francia-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition"
+                    >
+                        Iniciar Sesion
+                    </button>
+                    <button
+                        onClick={() => navigate('/contacto')}
+                        className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold py-2.5 px-4 rounded-xl text-sm transition"
+                    >
+                        Ir a Contacto
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    if (permissionDenied) {
+        return (
+            <div className="max-w-md mx-auto my-12 bg-white rounded-2xl shadow-sm border border-rojo-200 p-8 text-center space-y-4">
+                <div className="w-12 h-12 rounded-xl bg-rojo-100 text-rojo-700 font-bold text-lg flex items-center justify-center mx-auto">
+                    AD
+                </div>
+                <h2 className="text-xl font-bold text-slate-800">Acceso Denegado</h2>
+                <p className="text-sm text-slate-600">
+                    No tienes permisos para registrar nuevos lavados. Esta accion esta reservada exclusivamente para administradores.
+                </p>
+                <button
+                    onClick={() => navigate('/')}
+                    className="w-full bg-francia-600 hover:bg-francia-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm transition"
+                >
+                    Volver al Listado de Lavados
+                </button>
+            </div>
+        );
+    }
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center p-20 text-francia-700 font-bold text-base space-y-3">
+                <div className="w-6 h-6 rounded-full bg-francia-600 animate-ping"></div>
+                <div>Cargando opciones...</div>
+            </div>
+        );
+    }
 
     return (
         <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden my-4">
             <div className="bg-gradient-to-r from-francia-700 to-francia-800 p-6 text-white border-b-4 border-rojo-600">
                 <h2 className="text-2xl font-black tracking-tight">Agregar Nuevo Lavado</h2>
-                <p className="text-francia-100 text-sm mt-1">Completa los datos del vehículo y el servicio a realizar</p>
+                <p className="text-francia-100 text-sm mt-1">Completa los datos del vehiculo y el servicio a realizar</p>
             </div>
 
             <div className="p-6 sm:p-8">
@@ -74,7 +155,7 @@ export default function WashRecordCreate() {
                 <form onSubmit={handleCreate} className="space-y-5">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-slate-700 text-sm font-bold mb-1.5">Vehículo</label>
+                            <label className="block text-slate-700 text-sm font-bold mb-1.5">Vehiculo</label>
                             <input
                                 className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600 focus:border-francia-600 transition font-medium"
                                 placeholder="Ej: Toyota Hilux"
@@ -98,7 +179,7 @@ export default function WashRecordCreate() {
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-slate-700 text-sm font-bold mb-1.5">Tipo de Vehículo</label>
+                            <label className="block text-slate-700 text-sm font-bold mb-1.5">Tipo de Vehiculo</label>
                             <select
                                 className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600 focus:border-francia-600 transition font-medium"
                                 value={formData.vehicle_type}
@@ -136,11 +217,11 @@ export default function WashRecordCreate() {
                         >
                             {employees.map(e => (
                                 <option key={e.id} value={e.id} className="py-1">
-                                    {e.user?.first_name ? `${e.user.first_name} ${e.user.last_name || ''}` : (e.user?.username || e.id)}
+                                    {e.user?.first_name ? `${e.user.first_name} ${e.user.last_name || ''}`.trim() : (e.user?.username || e.id)}
                                 </option>
                             ))}
                         </select>
-                        <p className="text-xs text-slate-400 mt-1 font-medium">Tip: Mantén presionado Ctrl (o Cmd en Mac) para seleccionar varios empleados.</p>
+                        <p className="text-xs text-slate-400 mt-1 font-medium">Tip: Manten presionado Ctrl (o Cmd en Mac) para seleccionar varios empleados.</p>
                     </div>
 
                     <div>

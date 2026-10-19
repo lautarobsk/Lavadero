@@ -41,7 +41,7 @@ export default function Contact() {
                                 rel="noopener noreferrer"
                                 className="text-francia-700 font-bold hover:underline"
                             >
-                                Abrir mapa ↗
+                                Abrir mapa
                             </a>
                         </div>
                     </div>

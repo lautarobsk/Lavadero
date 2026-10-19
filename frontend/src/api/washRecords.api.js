@@ -53,3 +53,15 @@ export const createWashRecord = (data) => {
 export const deleteWashRecord = (id) => {
     return washRecordsApi.delete(`washrecords/${id}/`);
 }
+
+export const loginUser = (username, password) => {
+    return axios.post('http://localhost:8000/api/token/', { username, password });
+}
+
+export const registerUser = (userData) => {
+    return washRecordsApi.post('register/', userData);
+}
+
+export const getCurrentUser = () => {
+    return washRecordsApi.get('me/');
+}

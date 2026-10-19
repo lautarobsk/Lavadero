@@ -13,6 +13,26 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
+
+class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=4)
+    phone = serializers.CharField(required=False, allow_blank=True, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'password', 'first_name', 'last_name', 'email', 'phone']
+
+    def validate_username(self, value):
+        if User.objects.filter(username__iexact=value).exists():
+            raise serializers.ValidationError("Este nombre de usuario ya está registrado.")
+        return value
+
+    def create(self, validated_data):
+        phone = validated_data.pop('phone', '')
+        user = User.objects.create_user(**validated_data)
+        Employee.objects.create(user=user, phone=phone)
+        return user
+
 class EmployeeSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
     user_id = serializers.PrimaryKeyRelatedField(
