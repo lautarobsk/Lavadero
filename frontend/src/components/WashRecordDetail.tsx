@@ -263,11 +263,15 @@ export default function WashRecordDetail() {
                             value={editData.employees || []}
                             onChange={handleEmployeeChange}
                         >
-                            {employees.map(e => (
-                                <option key={e.id} value={e.id} className="py-1">
-                                    {e.user?.first_name ? `${e.user.first_name} ${e.user.last_name || ''}`.trim() : (e.user?.username || e.id)}
-                                </option>
-                            ))}
+                            {employees.map(e => {
+                                const fullName = e.user?.first_name ? `${e.user.first_name} ${e.user.last_name || ''}`.trim() : '';
+                                const label = fullName || (e.user?.username ? `DNI: ${e.user.username}` : `Empleado ${e.id}`);
+                                return (
+                                    <option key={e.id} value={e.id} className="py-1">
+                                        {label}
+                                    </option>
+                                );
+                            })}
                         </select>
                         <p className="text-xs text-slate-400 mt-1 font-medium">Tip: Manten presionado Ctrl (o Cmd en Mac) para seleccionar multiples.</p>
                     </div>

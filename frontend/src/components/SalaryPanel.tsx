@@ -45,6 +45,19 @@ interface WeekOption {
     isCurrent: boolean;
 }
 
+const getEmployeeDisplayName = (user?: EmployeeUser | any, fallbackId?: number): string => {
+    if (!user) return fallbackId ? `Empleado ${fallbackId}` : 'Empleado';
+    const first = user.first_name?.trim() || '';
+    const last = user.last_name?.trim() || '';
+    if (first || last) {
+        return `${first} ${last}`.trim();
+    }
+    if (user.dni || user.username) {
+        return `DNI ${user.dni || user.username}`;
+    }
+    return fallbackId ? `Empleado ${fallbackId}` : 'Empleado';
+};
+
 export default function SalaryPanel() {
     const navigate = useNavigate();
 
@@ -264,7 +277,7 @@ export default function SalaryPanel() {
 
             const coworkers = (r.employees_detail || [])
                 .filter(c => c.id !== currentEmployeeId)
-                .map(c => c.user?.first_name ? `${c.user.first_name} ${c.user.last_name || ''}`.trim() : (c.user?.username || `Empleado ${c.id}`));
+                .map(c => getEmployeeDisplayName(c.user, c.id));
 
             return {
                 wash: r,
@@ -303,7 +316,7 @@ export default function SalaryPanel() {
 
             const coworkers = (r.employees_detail || [])
                 .filter(c => c.id !== empId)
-                .map(c => c.user?.first_name ? `${c.user.first_name} ${c.user.last_name || ''}`.trim() : (c.user?.username || `Empleado ${c.id}`));
+                .map(c => getEmployeeDisplayName(c.user, c.id));
 
             return {
                 wash: r,
@@ -315,9 +328,7 @@ export default function SalaryPanel() {
             };
         });
 
-        const empName = targetEmp.user?.first_name
-            ? `${targetEmp.user.first_name} ${targetEmp.user.last_name || ''}`.trim()
-            : targetEmp.user?.username || `Empleado ${targetEmp.id}`;
+        const empName = getEmployeeDisplayName(targetEmp.user, targetEmp.id);
 
         return {
             employee: targetEmp,
@@ -345,7 +356,7 @@ export default function SalaryPanel() {
 
                 const coworkers = (r.employees_detail || [])
                     .filter(c => c.id !== emp.id)
-                    .map(c => c.user?.first_name ? `${c.user.first_name} ${c.user.last_name || ''}`.trim() : (c.user?.username || `Empleado ${c.id}`));
+                    .map(c => getEmployeeDisplayName(c.user, c.id));
 
                 return {
                     wash: r,
@@ -357,9 +368,7 @@ export default function SalaryPanel() {
                 };
             });
 
-            const empName = emp.user?.first_name
-                ? `${emp.user.first_name} ${emp.user.last_name || ''}`.trim()
-                : emp.user?.username || `Empleado ${emp.id}`;
+            const empName = getEmployeeDisplayName(emp.user, emp.id);
 
             return {
                 employee: emp,
@@ -455,7 +464,7 @@ export default function SalaryPanel() {
                     <p className="text-sm text-slate-500 font-medium mt-1">
                         {isAdmin
                             ? 'Administracion de liquidaciones semanales y registro de lavados por empleado'
-                            : `Registro personal de ${currentUser?.first_name ? `${currentUser.first_name} ${currentUser.last_name || ''}`.trim() : currentUser?.username}`}
+                            : `Registro personal de ${getEmployeeDisplayName(currentUser)}`}
                     </p>
                 </div>
 
@@ -717,11 +726,15 @@ export default function SalaryPanel() {
                                 className="bg-slate-50 border border-slate-300 text-slate-800 text-xs font-semibold px-3 py-2 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600"
                             >
                                 <option value="ALL">Todos los empleados ({employees.length})</option>
-                                {employees.map(emp => (
-                                    <option key={emp.id} value={emp.id}>
-                                        {emp.user?.first_name ? `${emp.user.first_name} ${emp.user.last_name || ''}`.trim() : emp.user?.username} (@{emp.user?.username})
-                                    </option>
-                                ))}
+                                {employees.map(emp => {
+                                    const fullName = getEmployeeDisplayName(emp.user, emp.id);
+                                    const dniText = emp.user?.username ? ` - DNI: ${emp.user.username}` : '';
+                                    return (
+                                        <option key={emp.id} value={emp.id}>
+                                            {fullName}{dniText}
+                                        </option>
+                                    );
+                                })}
                             </select>
                         </div>
                     </div>
@@ -740,9 +753,11 @@ export default function SalaryPanel() {
                                             <h4 className="font-black text-slate-900 text-xl leading-tight">
                                                 {adminSelectedEmployeeData.name}
                                             </h4>
-                                            <span className="text-xs font-mono text-slate-500">
-                                                @{adminSelectedEmployeeData.employee.user?.username}
-                                            </span>
+                                            {adminSelectedEmployeeData.employee.user?.username && (
+                                                <span className="text-xs font-mono font-bold text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
+                                                    DNI: {adminSelectedEmployeeData.employee.user.username}
+                                                </span>
+                                            )}
                                         </div>
                                         <p className="text-xs text-slate-500 mt-0.5">
                                             ID Empleado: {adminSelectedEmployeeData.employee.id}
@@ -983,8 +998,11 @@ export default function SalaryPanel() {
                                                                 {item.name}
                                                             </h4>
                                                             <p className="text-xs text-slate-500">
-                                                                Usuario: <span className="font-mono">{item.employee.user?.username}</span>
+                                                                {item.employee.user?.username && (
+                                                                    <>DNI: <span className="font-mono font-medium">{item.employee.user.username}</span></>
+                                                                )}
                                                                 {item.employee.phone && `, Tel: ${item.employee.phone}`}
+                                                                {item.employee.user?.email && `, Mail: ${item.employee.user.email}`}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -1102,7 +1120,7 @@ export default function SalaryPanel() {
                                                                 <strong className="text-slate-700">Participantes ({empCount}):</strong>{' '}
                                                                 {record.employees_detail && record.employees_detail.length > 0 ? (
                                                                     record.employees_detail.map((e: any) =>
-                                                                        e.user?.first_name ? `${e.user.first_name} ${e.user.last_name || ''}`.trim() : e.user?.username
+                                                                        getEmployeeDisplayName(e.user, e.id)
                                                                     ).join(', ')
                                                                 ) : (
                                                                     <span className="text-amber-600 font-semibold">Sin empleados asignados</span>

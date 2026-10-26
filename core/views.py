@@ -17,15 +17,18 @@ class RegisterView(APIView):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+            employee = getattr(user, 'employee', None)
             refresh = RefreshToken.for_user(user)
             return Response({
                 'message': 'Usuario registrado exitosamente',
                 'user': {
                     'id': user.id,
                     'username': user.username,
+                    'dni': user.username,
                     'first_name': user.first_name,
                     'last_name': user.last_name,
                     'email': user.email,
+                    'phone': employee.phone if employee else '',
                 },
                 'tokens': {
                     'refresh': str(refresh),
@@ -44,6 +47,7 @@ class CurrentUserView(APIView):
         return Response({
             'id': user.id,
             'username': user.username,
+            'dni': user.username,
             'first_name': user.first_name,
             'last_name': user.last_name,
             'email': user.email,

@@ -13,8 +13,9 @@ export default function Login() {
     // Estado del formulario de Registro
     const [regFirstName, setRegFirstName] = useState('');
     const [regLastName, setRegLastName] = useState('');
-    const [regUsername, setRegUsername] = useState('');
+    const [regDni, setRegDni] = useState('');
     const [regPhone, setRegPhone] = useState('');
+    const [regEmail, setRegEmail] = useState('');
     const [regPassword, setRegPassword] = useState('');
     const [regConfirmPassword, setRegConfirmPassword] = useState('');
 
@@ -42,13 +43,17 @@ export default function Login() {
         setError('');
         setLoading(true);
         try {
-            const response = await loginUser(loginUsername, loginPassword);
+            const raw = loginUsername.trim();
+            const cleanDni = raw.replace(/[\s.-]/g, '');
+            // Si el usuario ingresó un DNI (sólo dígitos, opcionalmente con puntos/guiones)
+            const usernameToSend = /^\d+$/.test(cleanDni) ? cleanDni : raw;
+            const response = await loginUser(usernameToSend, loginPassword);
             localStorage.setItem('access_token', response.data.access);
             localStorage.setItem('refresh_token', response.data.refresh);
             navigate('/');
         } catch (err: any) {
             console.error('Error al iniciar sesión:', err);
-            setError(err.response?.data?.detail || 'Usuario o contraseña incorrectos.');
+            setError(err.response?.data?.detail || 'DNI o contraseña incorrectos.');
         } finally {
             setLoading(false);
         }
@@ -57,6 +62,27 @@ export default function Login() {
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+
+        if (!regFirstName.trim()) {
+            setError('Por favor, ingresá tu nombre.');
+            return;
+        }
+
+        if (!regLastName.trim()) {
+            setError('Por favor, ingresá tu apellido.');
+            return;
+        }
+
+        const cleanDni = regDni.trim().replace(/[\s.-]/g, '');
+        if (!cleanDni) {
+            setError('Por favor, ingresá tu DNI.');
+            return;
+        }
+
+        if (!/^\d{6,10}$/.test(cleanDni)) {
+            setError('El DNI debe contener únicamente entre 6 y 10 números.');
+            return;
+        }
 
         if (regPassword.length < 4) {
             setError('La contraseña debe tener al menos 4 caracteres.');
@@ -73,8 +99,9 @@ export default function Login() {
             const response = await registerUser({
                 first_name: regFirstName.trim(),
                 last_name: regLastName.trim(),
-                username: regUsername.trim(),
+                dni: cleanDni,
                 phone: regPhone.trim(),
+                email: regEmail.trim(),
                 password: regPassword,
             });
 
@@ -86,8 +113,20 @@ export default function Login() {
         } catch (err: any) {
             console.error('Error al registrar cuenta:', err);
             const errData = err.response?.data;
-            if (errData?.username) {
+            if (errData?.dni) {
+                setError(Array.isArray(errData.dni) ? errData.dni[0] : errData.dni);
+            } else if (errData?.username) {
                 setError(Array.isArray(errData.username) ? errData.username[0] : errData.username);
+            } else if (errData?.first_name) {
+                setError(Array.isArray(errData.first_name) ? errData.first_name[0] : errData.first_name);
+            } else if (errData?.last_name) {
+                setError(Array.isArray(errData.last_name) ? errData.last_name[0] : errData.last_name);
+            } else if (errData?.email) {
+                setError(Array.isArray(errData.email) ? errData.email[0] : errData.email);
+            } else if (errData?.phone) {
+                setError(Array.isArray(errData.phone) ? errData.phone[0] : errData.phone);
+            } else if (errData?.password) {
+                setError(Array.isArray(errData.password) ? errData.password[0] : errData.password);
             } else if (errData?.detail) {
                 setError(errData.detail);
             } else {
@@ -123,17 +162,23 @@ export default function Login() {
                             <div className="flex justify-between items-center">
                                 <span className="text-slate-500 font-medium">Nombre:</span>
                                 <strong className="text-slate-800 font-bold">
-                                    {currentUser.first_name ? `${currentUser.first_name} ${currentUser.last_name || ''}` : currentUser.username}
+                                    {currentUser.first_name ? `${currentUser.first_name} ${currentUser.last_name || ''}`.trim() : currentUser.username}
                                 </strong>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-slate-500 font-medium">Usuario:</span>
-                                <span className="font-mono font-semibold text-slate-700">@{currentUser.username}</span>
+                                <span className="text-slate-500 font-medium">DNI:</span>
+                                <span className="font-mono font-semibold text-slate-700">{currentUser.dni || currentUser.username}</span>
                             </div>
                             {currentUser.phone && (
                                 <div className="flex justify-between items-center">
-                                    <span className="text-slate-500 font-medium">Teléfono:</span>
+                                    <span className="text-slate-500 font-medium">Celular:</span>
                                     <span className="text-slate-700 font-semibold">{currentUser.phone}</span>
+                                </div>
+                            )}
+                            {currentUser.email && (
+                                <div className="flex justify-between items-center">
+                                    <span className="text-slate-500 font-medium">Mail:</span>
+                                    <span className="text-slate-700 font-semibold">{currentUser.email}</span>
                                 </div>
                             )}
                             <div className="flex justify-between items-center pt-1 border-t border-slate-200">
@@ -173,13 +218,9 @@ export default function Login() {
         <div className="max-w-md mx-auto mt-8 bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
             {/* Header con tabs */}
             <div className="bg-gradient-to-r from-francia-700 to-francia-800 p-6 text-white border-b-4 border-rojo-600 text-center">
-                <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-2 text-2xl font-black">
-                    {mode === 'LOGIN'}
-                </div>
                 <h2 className="text-2xl font-black tracking-tight">
                     {mode === 'LOGIN' ? 'Iniciar Sesión' : 'Crear Cuenta'}
                 </h2>
-
 
                 {/* Botones de alternancia Iniciar Sesión / Registrarse */}
                 <div className="flex bg-black/20 p-1 rounded-xl mt-4 max-w-xs mx-auto border border-white/10">
@@ -218,13 +259,13 @@ export default function Login() {
                     <form onSubmit={handleLogin} className="space-y-4">
                         <div>
                             <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                                Usuario
+                                DNI o Usuario
                             </label>
                             <input
                                 type="text"
                                 value={loginUsername}
                                 onChange={(e) => setLoginUsername(e.target.value)}
-                                placeholder="Nombre de usuario"
+                                placeholder="Ingresá tu DNI o usuario"
                                 className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600 focus:border-francia-600 transition font-medium text-sm"
                                 required
                             />
@@ -286,29 +327,44 @@ export default function Login() {
 
                         <div>
                             <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1">
-                                Nombre de Usuario
+                                DNI <span className="text-slate-400 font-normal lowercase">(sin puntos)</span>
                             </label>
                             <input
                                 type="text"
-                                value={regUsername}
-                                onChange={(e) => setRegUsername(e.target.value)}
-                                placeholder="Ej: juanperez"
+                                inputMode="numeric"
+                                value={regDni}
+                                onChange={(e) => setRegDni(e.target.value)}
+                                placeholder="Ej: 38123456"
                                 className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600 transition font-medium text-sm"
                                 required
                             />
                         </div>
 
-                        <div>
-                            <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1">
-                                Teléfono <span className="text-slate-400 font-normal lowercase">(opcional)</span>
-                            </label>
-                            <input
-                                type="tel"
-                                value={regPhone}
-                                onChange={(e) => setRegPhone(e.target.value)}
-                                placeholder="Ej: 341 555-1234"
-                                className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600 transition font-medium text-sm"
-                            />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1">
+                                    Celular <span className="text-slate-400 font-normal lowercase">(opcional)</span>
+                                </label>
+                                <input
+                                    type="tel"
+                                    value={regPhone}
+                                    onChange={(e) => setRegPhone(e.target.value)}
+                                    placeholder="Ej: 341 555-1234"
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600 transition font-medium text-sm"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1">
+                                    Mail <span className="text-slate-400 font-normal lowercase">(opcional)</span>
+                                </label>
+                                <input
+                                    type="email"
+                                    value={regEmail}
+                                    onChange={(e) => setRegEmail(e.target.value)}
+                                    placeholder="Ej: juan@ejemplo.com"
+                                    className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600 transition font-medium text-sm"
+                                />
+                            </div>
                         </div>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -333,7 +389,7 @@ export default function Login() {
                                     type="password"
                                     value={regConfirmPassword}
                                     onChange={(e) => setRegConfirmPassword(e.target.value)}
-                                    placeholder="Contraseña"
+                                    placeholder="Repetir contraseña"
                                     className="w-full bg-slate-50 border border-slate-300 rounded-xl px-3.5 py-2 text-slate-800 focus:bg-white focus:outline-none focus:ring-2 focus:ring-francia-600 transition font-medium text-sm"
                                     required
                                 />

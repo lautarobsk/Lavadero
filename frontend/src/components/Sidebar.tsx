@@ -110,7 +110,7 @@ export default function Sidebar() {
                             </div>
                             <div className="overflow-hidden">
                                 <div className="font-bold text-xs text-white truncate">
-                                    {user.first_name ? `${user.first_name} ${user.last_name || ''}` : user.username}
+                                    {user.first_name ? `${user.first_name} ${user.last_name || ''}`.trim() : (user.dni ? `DNI ${user.dni}` : user.username)}
                                 </div>
                                 <span className={`inline-block text-[10px] font-extrabold uppercase px-1.5 py-0.2 rounded ${
                                     user.is_staff 

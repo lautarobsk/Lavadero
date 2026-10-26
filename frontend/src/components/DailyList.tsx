@@ -180,9 +180,10 @@ export default function DailyList() {
                                         </span>
                                         {record.employees_detail && record.employees_detail.length > 0 && (
                                             <span>
-                                                <strong className="text-slate-700">Empleados:</strong> {record.employees_detail.map((emp: any) =>
-                                                    emp.user?.first_name ? `${emp.user.first_name} ${emp.user.last_name || ''}`.trim() : emp.user?.username
-                                                ).join(', ')}
+                                                <strong className="text-slate-700">Empleados:</strong> {record.employees_detail.map((emp: any) => {
+                                                    const name = emp.user?.first_name ? `${emp.user.first_name} ${emp.user.last_name || ''}`.trim() : '';
+                                                    return name || (emp.user?.username ? `DNI: ${emp.user.username}` : `Empleado ${emp.id}`);
+                                                }).join(', ')}
                                             </span>
                                         )}
                                     </div>
