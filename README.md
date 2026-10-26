@@ -10,7 +10,6 @@ Este proyecto es un sistema web de gestión full-stack, pensado específicamente
 - **Panel de Administración Backend:** Administrador listo para usar provisto por Django para gestionar rápidamente todos los registros, altas de empleados y estadísticas.
 
 ## Arquitectura y Tecnologías
-El proyecto se compone de dos partes integradas mediante API REST y políticas CORS:
 
 **Backend:**
 - **Python & Django** (Lógica de negocio y Panel de Admin)
